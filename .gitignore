@@ -64,3 +64,6 @@ credentials.json
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Project planning notes (kept local)
+plan.txt
