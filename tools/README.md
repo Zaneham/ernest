@@ -88,6 +88,20 @@ to dump.
 emitted, submit it to IBM, print the histogram. The script you'd reach
 for once you're past Bell and Doom and want to run your own circuit.
 
+`run_jcl.py` — JCL processor. Reads a job-control-language deck that
+describes multiple circuits as named steps, compiles each one through
+Ernest, optionally submits the whole lot as a single batched
+`SamplerV2.run([qc1, qc2, qc3])` call. Mainframe-style job log on the
+way through. Used when you want to run several circuits per queue
+wait, which is the difference between five demos a month and twenty
+on the Open Plan. Sample deck in `examples/demos.jcl`.
+
+`make_simulator_image.py` — Generates the headline simulator PNG from
+DOOM.WAD via QPIE encoding and one million sampled measurements.
+Same maths Ernest's C simulator does; this one writes a PNG instead
+of ASCII so the result is shareable. Deterministic (seeded), so
+re-running on a clean clone reproduces the same image.
+
 ## The intended workflow once you're set up
 
 ```bash
@@ -120,8 +134,8 @@ is to detect without one.
 ## A note about the WAD scripts
 
 The Doom scripts read the TITLEPIC lump directly from your own copy of
-DOOM.WAD or DOOM2.WAD or FREEDOOM. We do not ship Bethesda's content
-in this repo and never will; you bring your own. The path is
+DOOM.WAD or DOOM2.WAD or FREEDOOM. This repo does not ship Bethesda's
+content and never will; you bring your own. The path is
 hardcoded as a Windows Steam install location for convenience. If
 that's not where your Doom lives, edit the `WAD_PATH` constant at
 the top of `run_ernest_wad_hw.py`. The format is the same across

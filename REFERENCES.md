@@ -61,8 +61,8 @@ Deutsch, D. (1985). Quantum theory, the Church–Turing principle and
     the universal quantum computer. *Proceedings of the Royal
     Society of London. A. Mathematical and Physical Sciences*,
     *400*(1818), 97–117. https://doi.org/10.1098/rspa.1985.0070
-> The original Deutsch paper. The two-qubit version we implement in
-> `demos/deutsch.c` is the bare-minimum demonstration.
+> The original Deutsch paper. The two-qubit version `demos/deutsch.c`
+> implements is the bare-minimum demonstration.
 
 ### Bernstein–Vazirani algorithm
 
@@ -197,10 +197,10 @@ section.
 id Software. (1993). *Doom* [Video game]. id Software / GT
     Interactive.
 > The 1993 first-person shooter. Ernest's `demos/doom_demo.c`
-> renders a Doom-themed image through the quantum simulator. We do
-> not distribute Bethesda WAD files with this project; users
-> supplying their own WAD via the `--wad` flag is the path through
-> the WAD-loader code in `src/image.c`.
+> renders a Doom-themed image through the quantum simulator. This
+> project does not distribute Bethesda WAD files; users supplying
+> their own WAD via the `--wad` flag is the path through the
+> WAD-loader code in `src/image.c`.
 
 DoomWiki contributors. (n.d.). *WAD*. DoomWiki.
     https://doomwiki.org/wiki/WAD

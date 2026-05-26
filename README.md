@@ -4,9 +4,9 @@ Ernest is a quantum compiler. It is named after Ernest Rutherford, of Brightwate
 
 In 1909 Rutherford had two of his students fire alpha particles at gold foil to see what would happen. A small number of them came back. He likened the experience to firing a fifteen-inch naval shell at tissue paper and having it return to introduce itself. From this he worked out that atoms have nuclei. Most compiler bugs feel similar.
 
-He won the Nobel Prize in Chemistry, which he resented on the grounds (so the story goes) that all science was either physics or stamp collecting. We honour his memory by writing this in C99, which is neither.
+He won the Nobel Prize in Chemistry, which he resented on the grounds (so the story goes) that all science was either physics or stamp collecting. I honour his memory by writing this in C99, which is neither.
 
-Rutherford appears on the New Zealand one hundred dollar note. This is also, by happenstance, the approximate cost of running one Bell state on real quantum hardware. We have named the compiler after the bill it will print.
+Rutherford appears on the New Zealand one hundred dollar note. This is also, by happenstance, the approximate cost of running one Bell state on real quantum hardware. The compiler is named after the bill it will print.
 
 ## Bethesda's *DOOM* title screen on a real quantum computer
 
@@ -269,8 +269,9 @@ The things this document writes about in the present tense, all of which are wor
 - **`qlint` static analysis pass.** Unused qubits, gates after measurement, repeat measurements, self-control, all caught as MNOTE diagnostics with source locations.
 - **libqstd**, the quantum standard library: QFT, inverse QFT, Grover diffusion, phase oracle, uniform superposition. Composable, cited.
 - **Mainframe-flavoured diagnostics.** MNOTE channel, ABEND dumps with PSW + trace + register map, MVS-style SNAP snapshots at every pipeline boundary.
-- **12/12 on the Qiskit corpus.** Every OpenQASM 3 file `qiskit.qasm3.dumps` emits across our sample circuits parses cleanly.
+- **12/12 on the Qiskit corpus.** Every OpenQASM 3 file `qiskit.qasm3.dumps` emits across the sample circuits parses cleanly.
 - **Byte-deterministic compilation.** Same input produces same output, every run, across both targets. 26/26 byte-identical in the determinism audit.
+- **Quantum JCL.** Job-control-language decks (`tools/run_jcl.py`) describe multiple circuits as named steps, compile each one through Ernest, and submit the whole lot as a single batched SamplerV2 job. One queue wait, N histograms back. Mainframe-style job log. Sample deck in `examples/demos.jcl`.
 
 ### Still to come
 
