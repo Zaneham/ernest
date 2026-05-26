@@ -1,0 +1,66 @@
+# Build artefacts
+build/
+*.o
+*.d
+*.obj
+*.exe
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+ernest
+
+# AOT codegen scratch (regenerated on every --aot run)
+/build/aot_circuit.c
+/build/aot_circuit.exe
+
+# Python noise
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+test/qiskit_corpus/.venv/
+
+# QASM files generated at the repo root by the IBM workflow
+# (the checked-in corpus under test/qiskit_corpus/samples/ stays)
+/bell_ernest_ibm.qasm
+/bell_ibm.qasm
+/mini_doom.qasm
+/mini_doom_ibm.qasm
+/wad_doom.qasm
+/wad_doom_ibm.qasm
+/*.cmap
+
+# Timestamped screenshots produced by the hardware demos.
+# The stable-named copies in docs/screenshots/ are tracked deliberately.
+/doom_hw_*.png
+/doom_wad_hw_*.png
+
+# Snapshot log dumps
+/*.snap
+
+# Do not commit credentials by accident. There are easier ways to ruin
+# your Tuesday than a leaked API key.
+*.token
+api_key.txt
+credentials.json
+.env
+.env.local
+
+# Editor / IDE noise
+*~
+*.bak
+*.swp
+*.swo
+*.orig
+.vscode/
+.idea/
+*.code-workspace
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini

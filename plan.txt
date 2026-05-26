@@ -1,0 +1,170 @@
+Ernest -- An Open Quantum Compiler
+===================================
+
+(Project name: "Ernest", after Ernest Rutherford of Brightwater,
+Nelson, who fired alpha particles at gold foil in 1909, watched a
+few bounce back, and worked out atoms have nuclei. Repo path stays
+"quantum" for findability; project identity is Ernest.)
+
+The thesis: quantum hardware is fragmented, hardware vendors all ship
+proprietary toolchains, and the only cross-vendor IR (QIR) has lost
+one of its biggest implementers (Intel discontinued Quantum Passes
+in February 2026). Qiskit and Cirq exist but are tied to their
+parent companies. There is no vendor-neutral open quantum compiler
+with serious optimizer ambition.
+
+Ernest is that compiler.
+
+The opportunity is sharper than usual because the field is small,
+the IR is already standardised (QIR), and the gap Intel left is
+public. A clean implementation here means Ernest is the obvious
+default for anyone who wants quantum compilation without picking a
+vendor side.
+
+
+Philosophy
+----------
+- QIR is the input. Ernest does not invent a new IR. The Quantum
+  Software Alliance is consolidating around QIR; Ernest accelerates
+  that.
+- Vendor-neutral by construction. No optimization may favour IBM's
+  gate set over IonQ's, Rigetti's, or Quantinuum's. Where vendor
+  hardware properties differ (e.g. all-to-all on trapped ion vs.
+  nearest-neighbour on superconducting), the cost model is per-
+  target and explicit.
+- Beat the Qiskit transpiler on a published benchmark before
+  claiming completeness. Concrete benchmark numbers > philosophy.
+- Honour the profiles. Base / Adaptive / Adaptive_RI / Unrestricted.
+  Ernest fails loudly when input requires capability the target
+  cannot provide.
+- No LLVM. QIR is *based on* LLVM IR; Ernest reads QIR via a
+  homemade parser. No libLLVM linkage.
+
+
+Architecture
+------------
+Frontend:        QIR text + QIR bitcode parsers
+                 OpenQASM 3 → QIR lowering (optional, later)
+Middle:          Manawa IR with `qop` dialect
+Optimizer:       gate-cancellation, commutation, ZX-calculus
+                 normalisation, Pauli tracking, layout-aware
+                 routing
+Backend:         per-target gate decomposition + connectivity
+                 routing + scheduling. Native gate set per vendor.
+Output:          vendor-native circuit format (OpenQASM for IBM,
+                 IonQ JSON, Rigetti Quil, Quantinuum's format)
+
+
+Tiers
+-----
+
+TIER 0 -- Read everything (3-4 weeks)
+  - QIR specification (qir-alliance/qir-spec) cover to cover
+  - At least one full QIR example from Q# compiler output
+  - Qiskit transpiler architecture doc
+  - Cirq's pass pipeline overview
+  - One ZX-calculus tutorial
+  - One Pauli-tracking paper
+  Output: a single doc summarising what Ernest's pass pipeline
+  needs to do that no other tool currently does.
+
+TIER 1 -- QIR plumbing (4-6 weeks)
+  - QIR text parser (round-trips: parse, print, parse again, match)
+  - QIR bitcode parser (later, optional)
+  - Verifier (catches malformed QIR, profile violations)
+  - Manawa `qop` dialect: gates as ops, qubits as typed values,
+    measurements as ops with classical-result outputs
+  - QIR → Manawa lowering
+  Milestone: read a non-trivial QIR file, dump it via Manawa, match
+  the original semantics.
+
+TIER 2 -- First passes (6-8 weeks)
+  - Constant folding of gates (e.g. H·H = I)
+  - Commutation analysis (which gates commute on which qubits)
+  - Single-qubit gate fusion (combine adjacent rotations)
+  - Gate cancellation (CX·CX = I, etc.)
+  - Dead-code elimination for qubit operations with no observable
+    effect (no measurement downstream)
+  Milestone: Ernest's output matches Qiskit transpiler -O3 on a
+  small Quantinuum benchmark suite.
+
+TIER 3 -- Layout-aware routing (8-10 weeks)
+  - Coupling-graph aware compilation: when target hardware doesn't
+    have all-to-all connectivity, insert SWAPs to satisfy
+    nearest-neighbour constraints.
+  - SABRE-style or similar layout algorithm.
+  - Cost model per target.
+  Milestone: Ernest beats Qiskit's default SABRE pass on at least
+  three published benchmarks (random circuits, QAOA, VQE).
+
+TIER 4 -- Multi-target backends (6-10 weeks)
+  - IBM backend: emit OpenQASM 3, native gate set {CX, RZ, SX, X}
+  - IonQ backend: emit IonQ JSON, native gate set {GPI, GPI2, MS}
+  - Rigetti backend: emit Quil, native gate set {RX, RZ, CZ}
+  - Quantinuum backend: emit native, gate set {U1q, ZZ, RZZ, Rz}
+  Milestone: same input QIR compiles cleanly for all four targets,
+  validated against vendor-provided simulators.
+
+TIER 5 -- Adaptive profile + mid-circuit measurement (8-12 weeks)
+  - Lower mid-circuit measurement on hardware that supports it
+  - Compile measurement-dependent branching
+  - Quantum-classical co-scheduling (classical computation between
+    quantum sub-circuits)
+  - Profile downgrading: if input is Adaptive but target is Base,
+    either reject or transform to deferred-measurement form where
+    possible.
+  Milestone: a small adaptive program (e.g. iterative phase
+  estimation) compiles and runs on Quantinuum hardware.
+
+TIER 6 -- ZX-calculus optimisation (research)
+  - Convert qop IR to ZX-diagram
+  - Apply ZX rewrite rules
+  - Extract optimised circuit back to qop IR
+  - Compare against PyZX
+  This is the research-y tier. May or may not produce big wins.
+
+
+Why Ernest And Not Contribute To Qiskit
+--------------------------------------
+Two reasons. First, Qiskit is structurally biased toward IBM's
+hardware -- the transpiler's cost model assumes superconducting +
+heavy-hex connectivity. A vendor-neutral compiler can't be a
+subdirectory inside IBM's project.
+
+Second, infrastructure leverage. Ernest compiles via Manawa, the
+same IR used by Whio and Marama. Shared optimizer infrastructure
+means a pass written for one frontier domain benefits the others.
+The cross-domain optimisation potential (e.g. classical optimisation
+of the adaptive-profile classical control code on a CHERIoT-protected
+host) is real and only Ernest+Whio+Manawa together can chase it.
+
+
+Where To Start
+--------------
+1. Read C:\dev\documents\quantum\ in order (01, then TODO list).
+2. Get free-tier access to IBM Quantum, Azure Quantum (IonQ +
+   Quantinuum), and Rigetti (via AWS Braket). Set up authentication.
+3. Bootstrap Manawa enough to parse QIR. The `qop` dialect first
+   pass can be minimal: just gates + qubits + measurements.
+4. End-to-end before any optimisation: read QIR, lower to qop,
+   emit OpenQASM 3, submit to IBM, observe matching output.
+
+
+Open Questions
+--------------
+- How much of qsharp/Q# do we want as a frontend? Probably none in
+  v0. QIR-in, vendor-format-out. Q# users already have a compiler.
+- OpenQASM 3 → QIR lowering: nice to have, not v0.
+- Hardware-aware ML-driven optimisation (the trendy research
+  direction): out of scope until v1.
+
+
+Non-Goals
+---------
+- Ernest is not a quantum simulator. qsim handles that, and qsim is
+  already in the portfolio.
+- Ernest is not a quantum error-correction tool. Surface codes,
+  topological codes, etc. are out of scope.
+- Ernest is not a quantum debugger (yet).
+- Ernest does not optimise for fault-tolerant regime (T-count
+  optimisation, etc.) in v0. NISQ-era first.
