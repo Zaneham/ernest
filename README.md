@@ -4,6 +4,8 @@ Ernest is a quantum compiler. It is named after Ernest Rutherford, of Brightwate
 
 In 1909 Rutherford had two of his students fire alpha particles at gold foil to see what would happen. A small number of them came back. He likened the experience to firing a fifteen-inch naval shell at tissue paper and having it return to introduce itself. From this he worked out that atoms have nuclei. Most compiler bugs feel similar.
 
+He went on to train more Nobel laureates than any other supervisor in history, including Niels Bohr. He never wrote a wavefunction himself; he trained the people who did. I try to write this compiler in the same spirit, though I have so far trained zero Nobel laureates.
+
 He won the Nobel Prize in Chemistry, which he resented on the grounds (so the story goes) that all science was either physics or stamp collecting. I honour his memory by writing this in C99, which is neither.
 
 Rutherford appears on the New Zealand one hundred dollar note. This is also, by happenstance, the approximate cost of running one Bell state on real quantum hardware. The compiler is named after the bill it will print.
