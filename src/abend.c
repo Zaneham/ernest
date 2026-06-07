@@ -7,15 +7,14 @@
 
 /*
  * The ABEND dump formatter. Mainframe console aesthetic, quantum
- * substance. The output reads exactly the way an operator scanning
- * a z/OS job log expects, with the small detail that the things
- * going wrong are amplitudes rather than account balances.
+ * substance: it reads like a z/OS operator's job log, except the
+ * things going wrong are amplitudes, not account balances.
  *
- * Nothing in here allocates. Strings get formatted into stack
- * buffers, walked through the dump, and discarded. The simulator
- * state and the TIR module are read but never modified, on the
- * principle that the program is already having a bad day and the
- * dump should not contribute.
+ * Nothing here allocates. Strings get formatted into stack buffers,
+ * walked through the dump, and thrown away. The simulator state and
+ * the TIR module are read but never touched, on the principle that
+ * the program is already having the worst day of its short life and
+ * the postmortem should not pile on.
  */
 
 /* ----- Pipeline stage tracking ---------------------------------- */

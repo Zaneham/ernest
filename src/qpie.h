@@ -5,39 +5,31 @@
 #include "sim.h"
 
 /*
- * Quantum Probability Image Encoding.
+ * Quantum Probability Image Encoding (QPIE).
  *
- * A small library of three functions that move pixels in and out of
- * the simulator's statevector. Encoding takes a brightness buffer
- * and writes amplitudes; sampling draws measurement outcomes from
- * the encoded distribution; reconstruction turns a measurement
- * histogram back into a brightness buffer.
+ * Three functions that move pixels in and out of the simulator's
+ * statevector. Encode writes a brightness buffer in as amplitudes;
+ * sample draws measurement outcomes from the encoded distribution;
+ * reconstruct turns a histogram of outcomes back into a picture.
  *
- * The encoding is the simplest one in the quantum-image-processing
- * literature: each pixel's intensity, divided by the total
- * intensity of the image and then square-rooted, becomes the
- * amplitude of one computational-basis state. All amplitudes are
- * real and non-negative. The probability of measuring basis state
- * |k> is intensity_k / total_intensity, which means a measurement
- * sample is a sample from the image's normalised brightness
- * distribution.
+ * The encoding is the simplest one going. Take each pixel's
+ * intensity, divide by the image's total intensity, square-root it,
+ * and that is the amplitude of one basis state. All real, all
+ * non-negative. Measuring |k> then comes up with probability
+ * intensity_k / total, so a measurement is just a draw from the
+ * image's own brightness distribution. The picture becomes a
+ * probability cloud, and you read it back by looking at it.
  *
- * Related encodings, briefly, so the reader knows what we are not
- * doing here. FRQI (Le, Dong, & Hirota, 2011) uses 2n+1 qubits for
- * a 2^n by 2^n image, with n+n for position and one ancilla
- * carrying colour as a rotation angle. NEQR (Zhang, Lu, Gao, &
- * Wang, 2013) keeps the position register but encodes 8-bit colour
- * into eight extra qubits in the computational basis. The encoding
- * here is the amplitude-only variant, also called QPIE in
- * Yao et al. (2017).
+ * The fancier cousins, for context: FRQI (Le, Dong & Hirota, 2011)
+ * spends 2n+1 qubits and carries colour as a rotation angle; NEQR
+ * (Zhang et al., 2013) packs 8-bit colour into eight more qubits in
+ * the computational basis. This is the amplitude-only variant, QPIE
+ * in Yao et al. (2017). Full citations live in REFERENCES.md.
  *
- * APA-style references go in a project-level REFERENCES.md when we
- * do the citation pass.
- *
- * For a 256 by 256 image, n+n = 16 qubits, which is the simulator's
- * cap. The coincidence is the kind of thing a careful engineer
- * notices and a less careful one designs around. The numbers were
- * here first.
+ * For a 256x256 image, n+n = 16 qubits, which is exactly the
+ * simulator's cap. A careful engineer notices a coincidence like
+ * that; a less careful one designs around it. The numbers were here
+ * first.
  */
 
 /*

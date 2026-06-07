@@ -9,8 +9,8 @@
 #include <math.h>
 #include <assert.h>
 
-/* Local M_PI, because MSVC's math.h doesn't grant it without a
- * feature macro and we'd rather not introduce one for one constant. */
+/* Local M_PI, because MSVC's math.h won't hand it over without a
+ * feature macro, and one constant is not worth a feature macro. */
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif

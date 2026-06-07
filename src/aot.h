@@ -18,12 +18,11 @@
  * away. Whatever gcc can vectorise, gcc does.
  *
  * For circuits up to about sixteen qubits, where the statevector
- * fits comfortably in cache, this beats the interpreted path by a
- * meaningful margin. Comparisons against larger third-party
- * simulators are a benchmark conversation; the point of this
- * pipeline is to demonstrate that Ernest's C99 / no-dependencies /
- * mainframe-style architecture can produce competitively fast code
- * by leaning on the C compiler rather than against it.
+ * fits comfortably in cache, this leaves the interpreted path behind
+ * by a wide margin. The whole trick is leaning on the C compiler
+ * instead of fighting it: emit dumb, flat, branch-free code and let
+ * gcc -O3 do the clever part. The fastest pass is the one you talked
+ * someone else into writing.
  */
 
 /*

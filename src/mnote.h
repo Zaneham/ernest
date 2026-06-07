@@ -6,13 +6,13 @@
 #include <assert.h>
 
 /*
- * MNOTE is the way the HLASM assembler tells its operator something
- * has happened. It is also, by mild appropriation, the way Ernest
- * tells its operator the same. Every diagnostic the compiler raises,
- * from the lexer all the way down to the simulator, flows through
- * this one channel. The whole compiler speaks the same language to
- * its user, and that language has been spoken in machine rooms since
- * the Beatles were still touring.
+ * MNOTE is how the HLASM assembler tells its operator something has
+ * happened. It is now also how Ernest does, so a quantum compiler is
+ * filing its complaints in a format that predates most of the physics
+ * it compiles for. Every diagnostic, from the lexer down to the
+ * simulator, flows through this one channel, so the whole compiler
+ * speaks one language to its user, and that language has been spoken
+ * in machine rooms since the Beatles were still touring.
  *
  * Severity follows the mainframe convention:
  *
@@ -22,9 +22,9 @@
  *   12  severe error, the work stopped and downstream is unsafe
  *   16  terminating error, the work was abandoned outright
  *
- * The maximum severity any module has seen so far is the return code
- * of the whole compiler when it exits. JES does the same thing on
- * z/OS; we are in good company.
+ * The highest severity any module raises becomes the compiler's exit
+ * code. JES does exactly this on z/OS, which is either good company
+ * or a cry for help. At this point, both.
  *
  * The diagnostic code is a small integer the module uses to identify
  * the specific complaint, separate from the human-readable message.

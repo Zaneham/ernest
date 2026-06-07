@@ -12,14 +12,19 @@
 /*
  * ERNESTDM. The ABEND dump formatter.
  *
- * When the simulator (or any other compiler stage) walks off the
- * edge of its design envelope, an ABEND is what the operator gets
- * instead of a crash. The dump is a mainframe-style postmortem:
- * a completion code, a Program Status Word, a recent-instructions
- * trace, a register summary, and a single-line reason at the top.
+ * Yes. A 1960s IBM mainframe abend dump, bolted onto a quantum
+ * compiler. The oldest diagnostic format in computing, reporting on
+ * the newest thing in it. The wheel turns, and somewhere a z/OS
+ * operator from 1974 feels a disturbance he cannot name.
  *
- * The ABEND code conventions follow z/Architecture, adapted to
- * mean things that can actually happen inside a quantum simulator:
+ * When the simulator (or any other stage) walks off the edge of its
+ * design envelope, this is what comes out instead of a bare crash:
+ * a completion code, a Program Status Word, a recent-instruction
+ * trace, a register summary, and one blunt sentence at the top
+ * saying what blew up.
+ *
+ * The codes follow z/Architecture, repurposed to mean things that
+ * can actually go wrong inside a statevector simulator:
  *
  *   S0C1   operation exception          unknown gate at runtime
  *   S0C4   protection exception         qubit index out of range
@@ -30,9 +35,9 @@
  *   U0008  user code                    statevector dimension exceeded
  *   U0009  user code                    classical reg dimension exceeded
  *
- * Codes that look mainframe-shaped, mean things that are quantum-
- * shaped, and read in a dump exactly the way a z/OS operator would
- * expect a real abend to read.
+ * Mainframe-shaped codes, quantum-shaped failures, and a dump that
+ * reads exactly the way a z/OS operator expects, right up until the
+ * detail that the thing going wrong is a probability amplitude.
  */
 
 /* ----- The abend block ------------------------------------------- */
@@ -42,7 +47,9 @@ typedef struct {
     char     reason[256];          /* one short sentence on what blew up */
 
     /*
-     * PSW. Sixty-four bits packed into four sixteen-bit fields:
+     * PSW. A real Program Status Word, the way the 360 did it, because
+     * if you are going to cosplay as a mainframe you commit to the bit.
+     * Sixty-four bits packed into four sixteen-bit fields:
      *
      *   FFFF_IIII_QQQQ_RRRR
      *

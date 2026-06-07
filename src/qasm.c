@@ -3,10 +3,10 @@
 
 /*
  * The emitter walks the TIR module and writes OpenQASM 3 to the
- * output stream. The hard parts are agreeing with TIR on what each
- * gate means and agreeing with OpenQASM on what each gate is
- * called. The two vocabularies broadly agree, which is a kindness
- * we'll happily take.
+ * output. The hard part is agreeing with TIR on what each gate means
+ * and agreeing with OpenQASM on what each gate is called. The two
+ * vocabularies mostly line up, which is a kindness, and kindnesses
+ * are thin on the ground in compiler work.
  */
 
 /*
@@ -60,12 +60,9 @@ void ernest_emit_qasm3(const tir_module_t *M, FILE *out)
     assert(M != NULL);
     assert(out != NULL);
 
-    /* Preamble. OpenQASM 3 begins with a version line and an
-     * include of the standard gate library, which provides the
-     * names h, x, cx, and friends. Without it we would have to
-     * spell out each gate's unitary matrix, which is a perfectly
-     * good Tuesday-afternoon activity but not what we came here to
-     * do today. */
+    /* Preamble. Version line and the stdgates include go first; that
+     * is where h, x, cx and the gang are actually defined. Skip it and
+     * you are hand-writing a 2x2 unitary for every gate. Which: no. */
     (void)fprintf(out, "OPENQASM 3.0;\n");
     (void)fprintf(out, "include \"stdgates.inc\";\n");
 

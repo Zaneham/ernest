@@ -5,15 +5,18 @@
 #include <stdio.h>
 
 /*
- * A tiny image type for the quantum-rendering demo.
+ * A tiny image type for the quantum-rendering demo. Yes, this is the
+ * part where Doom's title screen gets encoded into a 16-qubit
+ * statevector. It runs on everything else, so it was only a matter of
+ * time.
  *
- * The image dimensions are fixed at 256x256 = 65536 pixels because
- * that is exactly 2^16, and we are going to encode each pixel's
- * brightness as the amplitude on one basis state of a 16-qubit
- * register. The simulator caps at 16 qubits. The Doom title screen
- * is 320x200; we downsample. The coincidence between Doom's
- * approximate pixel count and our maximum addressable basis state
- * is the kind of thing that justifies a project on its own.
+ * 256x256 = 65536 pixels, which is exactly 2^16, so each pixel's
+ * brightness becomes the amplitude on one basis state of a 16-qubit
+ * register. The simulator caps at 16 qubits; the Doom title screen is
+ * 320x200, so it gets downsampled to fit. That Doom's pixel count and
+ * a 16-qubit register's basis count land this close is a coincidence
+ * flimsy enough to justify an entire project, which is exactly what
+ * happened here.
  *
  * Brightness is 8-bit grayscale. Zero is black. The encoding
  * normalises to a unit statevector so the absolute scale doesn't
@@ -71,10 +74,11 @@ int ernest_image_load_ppm(ernest_image_t *img, const char *path);
  * file is not a valid IWAD or PWAD, lacks a TITLEPIC, or lacks a
  * usable PLAYPAL.
  *
- * Bring your own WAD: we do not ship Bethesda content with the
- * compiler. Point this function at a legally-acquired DOOM.WAD,
- * DOOM1.WAD, DOOM2.WAD, or a FREEDOOM IWAD. The WAD format is
- * identical between vendors so all of them work.
+ * Bring your own WAD. Ernest does not ship id's content with a
+ * quantum compiler, for reasons that should not need spelling out.
+ * Point this at a legally-acquired DOOM.WAD, DOOM1.WAD, DOOM2.WAD, or
+ * a FREEDOOM IWAD. The WAD format is identical between vendors, so
+ * all of them work.
  */
 int ernest_image_load_wad_titlepic(ernest_image_t *img, const char *path);
 
