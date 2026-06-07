@@ -1,3 +1,10 @@
+/* popen/pclose are POSIX, not ISO C, so under -std=c99 glibc hides them
+ * behind a feature macro. MinGW exposes them regardless, which is why this
+ * only ever bites on Linux. Must precede every system header. */
+#if !defined(_WIN32)
+#  define _POSIX_C_SOURCE 200809L
+#endif
+
 #include "aot.h"
 
 #include <stdio.h>
