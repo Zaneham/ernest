@@ -1,0 +1,45 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: build + smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GCC 13
+        run: sudo apt-get update && sudo apt-get install -y gcc-13
+      # The Makefile's full regime: -Werror, the whole warning set, and
+      # GCC's -fanalyzer. If this is green, the tree is clean.
+      - name: Build
+        run: make CC=gcc-13
+      - name: Smoke test
+        run: make CC=gcc-13 smoke
+
+  sanitizers:
+    name: ASan + UBSan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GCC 13
+        run: sudo apt-get update && sudo apt-get install -y gcc-13
+      # Build with address + undefined-behaviour sanitizers, then run the
+      # default demo through them. Catches the bugs warnings cannot.
+      - name: Build with sanitizers
+        run: make CC=gcc-13 debug
+      - name: Exercise under sanitizers
+        run: ./ernest > /dev/null
+
+  cppcheck:
+    name: cppcheck
+    runs-on: ubuntu-latest
+    # Informational: cppcheck --inconclusive surfaces things worth a look
+    # without blocking a clean build on style opinions.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+      - name: Static analysis
+        run: make cppcheck
